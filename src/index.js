@@ -1,9 +1,11 @@
 import express from 'express';
+import middlewaresConfig from './config/middlewares';
 
 const app = express();
+middlewaresConfig(app);
 
 app.get('/', (req, res) => 
-{  res.send('Welcome');
+{  res.send('/src/index.js--Welcome');
 });
 
 app.listen(3000, err => 
