@@ -1,13 +1,14 @@
 import express from 'express';
 import middlewaresConfig from './config/middlewares';
 import './config/db';
+import { CustomerRoutes } from './modules';
 
 const app = express();
 middlewaresConfig(app);
 
-app.get('/', (req, res) => 
-{  res.send('/src/index.js--Welcome');
-});
+app.get('/', (req, res) => {  res.send('/src/index.js--Welcome');  });
+
+app.use('/api/v1/customers', CustomerRoutes);
 
 app.listen(3000, err => 
 { if (err) { console.error('/src/index.js-error=',err);  } 
