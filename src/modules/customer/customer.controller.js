@@ -1,7 +1,7 @@
 import * as Yup from 'yup';
 import { PROVIDER_ENUM } from './customer.model';
 import { AuthProvider } from '../../services/authProvider';
-import {buildCustomerInfo} from './buildCustomerInfo'
+import { getOrCreateCustomer, me } from './customer';
 
 export const create = async (req, res) => 
 {  const { token, provider } = req.body;
@@ -12,22 +12,18 @@ export const create = async (req, res) =>
 
   try 
     {   await bodySchema.validate({ token, provider });
+       console.log('/cust.controller-token,provider=',token,provider)
+       let data;
        if (provider === 'FACEBOOK') 
-          { const data = await AuthProvider.Facebook.authAsync(token);
-            const customer = buildCustomerInfo(data, provider);
-             //res.status(201).json(data);
-             res.status(201).json(customer);
-          } 
+          { data = await AuthProvider.Facebook.authAsync(token);     } 
         else if (provider === 'GOOGLE') 
-         {  const data = await AuthProvider.Google.authAsync(token);
-            const customer = buildCustomerInfo(data, provider);
-            //res.status(201).json(data);
-            res.status(201).json(customer);
-         } 
+         {  data = await AuthProvider.Google.authAsync(token);       } 
         else {  res.sendStatus(400);  }
+        console.log('/cust.controller-data=',data);
+        const customer = await getOrCreateCustomer(data, provider);
+        res.status(200).json(customer);
     } 
-  catch (error) {  // res.status(400).json({ message: "/customer.controller-facebook--error" });
-                   res.status(400).json({ message: error.message });
+  catch (error) {   res.status(400).json({ message: error.message });
                 }
 };
 
