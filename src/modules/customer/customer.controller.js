@@ -1,5 +1,6 @@
 import * as Yup from 'yup';
 import { PROVIDER_ENUM } from './customer.model';
+import { AuthProvider } from '../../services/authProvider';
 
 export const create = async (req, res) => 
 {  const { token, provider } = req.body;
@@ -10,8 +11,16 @@ export const create = async (req, res) =>
 
   try 
     {   await bodySchema.validate({ token, provider });
-        res.status(201).json({ message: '/customer.controller--success' });
+      
+       if (provider === 'FACEBOOK') 
+          { const data = await AuthProvider.Facebook.authAsync(token);
+          //  res.status(201).json({ message: '/customer.controller-facebook--success' });
+            res.status(201).json(data);
+          } 
+           
     } 
-  catch (error) {  res.status(400).json({ message: error.message });  }
+  catch (error) {   res.status(400).json({ message: "/customer.controller-facebook--error" });
+                  //  res.status(400).json({ message: error.message });
+                }
 };
 
