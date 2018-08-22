@@ -27,7 +27,7 @@ export const getOrCreateCustomer = async (info, providerName) =>
          return _customer;
       } catch (error) { throw error; }
 };
-
+//-----define after NavigationService in mobile app
 export const me = async userId => 
 {  try { const user = await Customer.findById(userId);
          if (!user) {  throw new Error('User not exist');  }

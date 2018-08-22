@@ -30,4 +30,14 @@ export const create = async (req, res) =>
   catch (error) {   res.status(400).json({ message: error.message });
                 }
 };
-
+//--after NavigationService in mobile app
+export const getUserInfo = async (req, res) => 
+{  try {  if (req.user) {  const userInfo = await me(req.user._id);
+                           res.status(200).json(userInfo);
+                        } 
+                  else { res.status(400).json({ message: 'No User' });   }
+       }
+   catch (error) 
+      { res.status(400).json({ message: error.message });
+      }
+};
